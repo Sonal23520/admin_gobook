@@ -59,6 +59,7 @@ export const OrdersTable = ({ orders }) => {
                   <TableCell>{order.data.price}</TableCell>
                   <TableCell>
                     <Chip
+                      color={order.data.ispending ? "error" : "success"}
                       label={order.data.ispending ? "Pending" : "Completed"}
                       variant="outlined"
                     />
