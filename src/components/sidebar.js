@@ -9,7 +9,6 @@ import {
 import { Cog as CogIcon } from "../icons/cog";
 import { DocumentText as DocumentTextIcon } from "../icons/document-text";
 import { Home as HomeIcon } from "../icons/home";
-import { ShoppingCart as ShoppingCartIcon } from "../icons/shopping-cart";
 import { Star as StarIcon } from "../icons/star";
 import { User as UserIcon } from "../icons/user";
 
