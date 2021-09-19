@@ -8,20 +8,20 @@ import {
 } from "@material-ui/core";
 import { Cog as CogIcon } from "../icons/cog";
 import { DocumentText as DocumentTextIcon } from "../icons/document-text";
-import { Home as HomeIcon } from "../icons/home";
+import { Home, Book } from "@material-ui/icons";
 import { Star as StarIcon } from "../icons/star";
 import { User as UserIcon } from "../icons/user";
 
 const items = [
   {
     href: "/dashboard",
-    icon: HomeIcon,
+    icon: Home,
     label: "Home",
   },
   {
     href: "/dashboard/settings",
-    icon: CogIcon,
-    label: "Settings",
+    icon: Book,
+    label: "Books",
   },
   {
     href: "/dashboard/theme",
