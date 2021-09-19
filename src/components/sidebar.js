@@ -1,42 +1,43 @@
-import { Link as RouterLink, matchPath, useLocation } from 'react-router-dom';
-import { Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import { Cog as CogIcon } from '../icons/cog';
-import { DocumentText as DocumentTextIcon } from '../icons/document-text';
-import { Home as HomeIcon } from '../icons/home';
-import { ShoppingCart as ShoppingCartIcon } from '../icons/shopping-cart';
-import { Star as StarIcon } from '../icons/star';
-import { User as UserIcon } from '../icons/user';
+import { Link as RouterLink, matchPath, useLocation } from "react-router-dom";
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from "@material-ui/core";
+import { Cog as CogIcon } from "../icons/cog";
+import { DocumentText as DocumentTextIcon } from "../icons/document-text";
+import { Home as HomeIcon } from "../icons/home";
+import { ShoppingCart as ShoppingCartIcon } from "../icons/shopping-cart";
+import { Star as StarIcon } from "../icons/star";
+import { User as UserIcon } from "../icons/user";
 
 const items = [
   {
-    href: '/dashboard',
+    href: "/dashboard",
     icon: HomeIcon,
-    label: 'Home'
+    label: "Home",
   },
   {
-    href: '/dashboard/orders',
-    icon: ShoppingCartIcon,
-    label: 'Orders'
-  },
-  {
-    href: '/dashboard/settings',
+    href: "/dashboard/settings",
     icon: CogIcon,
-    label: 'Settings'
+    label: "Settings",
   },
   {
-    href: '/dashboard/theme',
+    href: "/dashboard/theme",
     icon: DocumentTextIcon,
-    label: 'Theme'
+    label: "Theme",
   },
   {
-    href: '/dashboard/icons',
+    href: "/dashboard/icons",
     icon: StarIcon,
-    label: 'Icons'
+    label: "Icons",
   },
   {
-    href: '/404',
+    href: "/404",
     icon: UserIcon,
-    label: '404'
+    label: "404",
   },
 ];
 
@@ -50,19 +51,22 @@ export const Sidebar = () => {
       variant="permanent"
       PaperProps={{
         sx: {
-          backgroundColor: 'background.paper',
-          display: 'flex',
-          flexDirection: 'column',
-          height: 'calc(100% - 64px)',
+          backgroundColor: "background.paper",
+          display: "flex",
+          flexDirection: "column",
+          height: "calc(100% - 64px)",
           p: 1,
           top: 64,
-          width: 73
-        }
+          width: 73,
+        },
       }}
     >
-      <List sx={{ width: '100%' }}>
+      <List sx={{ width: "100%" }}>
         {items.map(({ href, icon: Icon, label }) => {
-          const active = matchPath({ path: href, end: true }, location.pathname);
+          const active = matchPath(
+            { path: href, end: true },
+            location.pathname
+          );
 
           return (
             <ListItem
@@ -71,19 +75,19 @@ export const Sidebar = () => {
               key={href}
               to={href}
               sx={{
-                flexDirection: 'column',
-                color: active ? 'primary.main' : 'text.secondary',
+                flexDirection: "column",
+                color: active ? "primary.main" : "text.secondary",
                 px: 2,
                 py: 1.5,
-                '&:hover': {
-                  color: 'primary.main'
-                }
+                "&:hover": {
+                  color: "primary.main",
+                },
               }}
             >
               <ListItemIcon
                 sx={{
-                  minWidth: 'auto',
-                  color: 'inherit'
+                  minWidth: "auto",
+                  color: "inherit",
                 }}
               >
                 <Icon />
@@ -93,9 +97,9 @@ export const Sidebar = () => {
                 primaryTypographyProps={{
                   sx: {
                     pb: 0,
-                    pt: 1.25
+                    pt: 1.25,
                   },
-                  variant: 'caption'
+                  variant: "caption",
                 }}
               />
             </ListItem>

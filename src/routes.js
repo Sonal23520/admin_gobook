@@ -1,49 +1,45 @@
-import { Navigate } from 'react-router-dom';
-import { Layout } from './components/layout';
-import { Icons } from './pages/icons';
-import { NotFound } from './pages/not-found';
-import { Orders } from './pages/orders';
-import { Reports } from './pages/reports';
-import { Settings } from './pages/settings';
-import { Theme } from './pages/theme';
+import { Navigate } from "react-router-dom";
+import { Layout } from "./components/layout";
+import { Icons } from "./pages/icons";
+import { NotFound } from "./pages/not-found";
+import { Reports } from "./pages/reports";
+import { Settings } from "./pages/settings";
+import { Theme } from "./pages/theme";
 
 export const routes = [
   {
-    path: '/',
-    element: <Navigate to="/dashboard" />
+    path: "/",
+    element: <Navigate to="/dashboard" />,
   },
   {
-    path: 'dashboard',
+    path: "dashboard",
     element: <Layout />,
     children: [
       {
-        path: '/',
-        element: <Reports />
+        path: "",
+        element: <Reports />,
+      },
+
+      {
+        path: "settings",
+        element: <Settings />,
       },
       {
-        path: 'orders',
-        element: <Orders />
+        path: "theme",
+        element: <Theme />,
       },
       {
-        path: 'settings',
-        element: <Settings />
+        path: "icons",
+        element: <Icons />,
       },
       {
-        path: 'theme',
-        element: <Theme />
+        path: "*",
+        element: <Navigate to="/404" />,
       },
-      {
-        path: 'icons',
-        element: <Icons />
-      },
-      {
-        path: '*',
-        element: <Navigate to="/404" />
-      }
-    ]
+    ],
   },
   {
-    path: '404',
-    element: <NotFound />
-  }
+    path: "404",
+    element: <NotFound />,
+  },
 ];
