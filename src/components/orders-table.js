@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
-import { Link as RouterLink } from "react-router-dom";
-import { format } from "date-fns";
+
 import {
   Box,
   Chip,
@@ -11,6 +10,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+  TableContainer,
 } from "@material-ui/core";
 import { Scrollbar } from "./scrollbar";
 
@@ -34,11 +34,10 @@ const statusVariants = [
 ];
 
 export const OrdersTable = ({ orders }) => {
-  console.log(orders);
   return (
     <div>
-      <Scrollbar>
-        <Table sx={{ minWidth: 1000 }}>
+      <TableContainer sx={{ maxHeight: "45vh" }}>
+        <Table stickyHeader sx={{ minWidth: 1000 }}>
           <TableHead>
             <TableRow>
               <TableCell>Full Name</TableCell>
@@ -51,10 +50,6 @@ export const OrdersTable = ({ orders }) => {
           </TableHead>
           <TableBody>
             {orders.map((order) => {
-              // const statusVariant = statusVariants.find(
-              //   (variant) => variant.value === order.status
-              // );
-
               return (
                 <TableRow key={order.id}>
                   <TableCell>{order.id}</TableCell>
@@ -73,7 +68,7 @@ export const OrdersTable = ({ orders }) => {
             })}
           </TableBody>
         </Table>
-      </Scrollbar>
+      </TableContainer>
     </div>
   );
 };
