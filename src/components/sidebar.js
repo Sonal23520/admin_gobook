@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import { Cog as CogIcon } from "../icons/cog";
 import { DocumentText as DocumentTextIcon } from "../icons/document-text";
-import { Home, Book } from "@material-ui/icons";
+import { Home, Book, Category } from "@material-ui/icons";
 import { Star as StarIcon } from "../icons/star";
 import { User as UserIcon } from "../icons/user";
 
@@ -21,12 +21,12 @@ const items = [
   {
     href: "/dashboard/settings",
     icon: Book,
-    label: "Books",
+    label: "Book",
   },
   {
     href: "/dashboard/theme",
-    icon: DocumentTextIcon,
-    label: "Theme",
+    icon: Category,
+    label: "Category",
   },
   {
     href: "/dashboard/icons",
