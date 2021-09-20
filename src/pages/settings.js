@@ -1,263 +1,375 @@
-import { Helmet } from 'react-helmet';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import { useState, useEffect, useRef } from "react";
+import { Helmet } from "react-helmet";
 import {
-  Avatar,
   Box,
-  Button,
-  Card,
-  Container,
-  FormHelperText,
   Grid,
-  MenuItem,
   TextField,
-  Typography
-} from '@material-ui/core';
+  Button,
+  Typography,
+  Backdrop,
+  CircularProgress,
+  Snackbar,
+  Alert,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@material-ui/core";
 
-const companySizeOptions = ['1-10', '11-30', '31-50', '50+'];
+import { db, storage } from "../Firebase";
 
 export const Settings = () => {
-  const formik = useFormik({
-    initialValues: {
-      companyName: 'ACME Corp LLC.',
-      companySize: '1-10',
-      email: 'chen.simmons@acmecorp.com',
-      fullName: 'Chen Simmons',
-      jobTitle: 'Operation',
-      submit: null
-    },
-    validationSchema: Yup.object().shape({
-      companyName: Yup.string().max(255).required('Company name is required'),
-      companySize: Yup
-        .string()
-        .max(255)
-        .oneOf(companySizeOptions)
-        .required('Company size is required'),
-      email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-      fullName: Yup.string().max(255).required('Full Name is required'),
-      jobTitle: Yup.string().max(255).required('Job name is required')
-    }),
-    onSubmit: async (values, helpers) => {
-      try {
-        helpers.setStatus({ success: true });
-        helpers.setSubmitting(false);
-      } catch (err) {
-        console.error(err);
-        helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
-        helpers.setSubmitting(false);
-      }
-    }
-  });
+  const [bookName, setbookName] = useState("");
+  const [bookPrice, setbookPrice] = useState("");
+  const [bookQty, setbookQty] = useState("");
+  const [categoryValue, setcategoryValue] = useState("");
+  const [gradeValue, setgradeValue] = useState("");
+  const [grades, setgrades] = useState([]);
+  const [categoryName, setcategoryName] = useState([]);
+  const [bookFileName, setbookFileName] = useState("Upload Book Image");
+  const [bookFile, setbookFile] = useState([]);
+  const noneGrade = useRef();
+  //Validation//
+  const [bookNameError, setbookNameError] = useState(false);
+  const [priceError, setpriceError] = useState(false);
+  const [qtyError, setqtyError] = useState(false);
+  const [categoryError, setcategoryError] = useState(false);
+  const [gradeError, setgradeError] = useState(false);
+  const [bookFileNameError, setbookFileNameError] = useState(false);
+  const [gradeDisableCkeck, setgradeDisableCkeck] = useState(true);
 
+  const [progress, setProgress] = useState(0);
+  const [backdrop, setBackdrop] = useState(false);
+
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+  });
+  const { vertical, horizontal, open } = state;
+  const [successMessage, setSuccessMessage] = useState("");
+
+  useEffect(() => {
+    db.collection("GoBook").onSnapshot((snapshot) => {
+      setcategoryName(snapshot.docs.map((doc) => doc.id));
+    });
+  }, []);
+
+  function uploadFile(file) {
+    if (file.target.files[0]) {
+      setbookFileName(file.target.files[0].name);
+      setbookFile(file.target.files[0]);
+    }
+  }
+
+  function validation() {
+    if (categoryValue === "") {
+      setcategoryError(true);
+    } else if (categoryValue.startsWith("Grade") && gradeValue === "") {
+      setcategoryError(false);
+      setgradeError(true);
+    } else if (bookName === "") {
+      setgradeError(false);
+      setbookNameError(true);
+    } else if (bookPrice === "") {
+      setbookNameError(false);
+      setpriceError(true);
+    } else if (bookQty === "") {
+      setpriceError(false);
+      setqtyError(true);
+    } else if (
+      bookFileName === "Upload Book Image" ||
+      !bookFile.type.startsWith("image")
+    ) {
+      setqtyError(false);
+      setbookFileNameError(true);
+    } else {
+      setbookFileNameError(false);
+      return true;
+    }
+  }
+
+  function addBook() {
+    if (validation()) {
+      const uploadImage = storage
+        .ref(`Book_Images/${bookFile.name}`)
+        .put(bookFile);
+
+      uploadImage.on(
+        "state_changed",
+        (snapshot) => {
+          const prog = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          setBackdrop(true);
+          setProgress(prog);
+        },
+        (error) => {
+          console.log(error);
+        },
+        () => {
+          storage
+            .ref("Book_Images")
+            .child(bookFile.name)
+            .getDownloadURL()
+            .then((url) => {
+              setBackdrop(false);
+              db.collection("GoBook")
+                .doc(categoryValue)
+                .collection(
+                  categoryValue.startsWith("Grade")
+                    ? gradeValue
+                    : noneGrade.current.value
+                )
+                .doc(bookName)
+                .set({
+                  boolimage: url,
+                  bookname: bookName,
+                  bookprice: bookPrice,
+                  qty: bookQty,
+                })
+                .then(() => {
+                  setSuccessMessage("Book Added");
+                  openMessage({
+                    vertical: "top",
+                    horizontal: "center",
+                  });
+                  clean();
+                });
+            });
+        }
+      );
+    }
+  }
+  function clean() {
+    setbookFileName("Upload Book Image");
+    setbookName("");
+    setbookFile([]);
+    setbookPrice("");
+    setbookQty("");
+    setcategoryValue("");
+    setcategoryError(false);
+    setgradeError(false);
+    setbookNameError(false);
+    setpriceError(false);
+    setqtyError(false);
+    setbookFileNameError(false);
+  }
+
+  function openMessage(newState) {
+    setState({ open: true, ...newState });
+  }
+
+  function closeMessage() {
+    setState({ ...state, open: false });
+  }
+  function gradeDisable(catename) {
+    if (catename.startsWith("Grade 1")) {
+      setgrades([]);
+      setgradeDisableCkeck(false);
+      for (let index = 1; index <= 5; index++) {
+        setgrades((oldArray) => [...oldArray, `Grade_${index}`]);
+      }
+    } else if (catename.startsWith("Grade 6")) {
+      setgrades([]);
+      setgradeDisableCkeck(false);
+      for (let index = 6; index <= 10; index++) {
+        setgrades((oldArray) => [...oldArray, `Grade_${index}`]);
+      }
+    } else {
+      setgradeDisableCkeck(true);
+    }
+  }
   return (
     <>
       <Helmet>
-        <title>Settings | Carpatin Dashboard</title>
+        <title>GoBooks Books</title>
       </Helmet>
+
+      {/* ////////////? UTIL START///////// */}
+      <Snackbar
+        key={vertical + horizontal}
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        onClose={closeMessage}
+        autoHideDuration={5000}
+      >
+        <Alert severity="success" onClose={closeMessage} sx={{ width: "100%" }}>
+          {successMessage}
+        </Alert>
+      </Snackbar>
+
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={backdrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      {/* ////////////? UTIL END///////// */}
+
       <Box
         sx={{
-          backgroundColor: 'background.default',
-          pb: 3,
-          pt: 8
+          backgroundColor: "Background.default",
+          height: "100%",
         }}
       >
-        <Container maxWidth="lg">
-          <Typography
-            color="textPrimary"
-            sx={{ mb: 3 }}
-            variant="h4"
-          >
-            Settings
-          </Typography>
-          <Grid
-            container
-            spacing={3}
-          >
-            <Grid
-              item
-              md={4}
-              xs={12}
+        <Grid
+          flex
+          justifyContent="center"
+          alignItems="center"
+          sx={{ height: "100%" }}
+          container
+        >
+          <Grid item xs={12} md={6}>
+            <Box
+              mx={8}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-around",
+                // alignItems: "center",
+                border: "1px solid gray",
+                borderRadius: "10px",
+              }}
+              px={5}
+              py={5}
             >
               <Typography
-                color="textPrimary"
-                variant="h6"
+                variant="h4"
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: "30px",
+                }}
               >
-                Account
+                Add Book
               </Typography>
-            </Grid>
-            <Grid
-              item
-              md={8}
-              xs={12}
-            >
-              <Card
+              <FormControl size="small" sx={{ marginBottom: "16px" }} fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  Select Category
+                </InputLabel>
+                <Select
+                  error={categoryError}
+                  labelId="demo-simple-select-label"
+                  value={categoryValue}
+                  label="Select Category"
+                  onChange={(val) => {
+                    setcategoryValue(val.target.value);
+                    gradeDisable(val.target.value);
+                  }}
+                >
+                  {categoryName.map((categoryname) => (
+                    <MenuItem value={categoryname}>{categoryname}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              {gradeDisableCkeck ? (
+                <TextField
+                  inputRef={noneGrade}
+                  sx={{ marginBottom: "16px" }}
+                  value={"Books"}
+                  disabled
+                  size="small"
+                />
+              ) : (
+                <FormControl
+                  size="small"
+                  disabled={gradeDisableCkeck}
+                  sx={{ marginBottom: "16px" }}
+                  fullWidth
+                >
+                  <InputLabel id="demo-simple-select-label-grade">
+                    Select Grade
+                  </InputLabel>
+                  <Select
+                    error={gradeError}
+                    labelId="demo-simple-select-label-grade"
+                    value={gradeValue}
+                    label="Select Grade"
+                    onChange={(val) => {
+                      setgradeValue(val.target.value);
+                    }}
+                  >
+                    {grades.map((grade) => (
+                      <MenuItem value={grade}>{grade}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+              <TextField
+                size="small"
+                fullWidth
+                label="Book Name"
                 variant="outlined"
-                sx={{ p: 3 }}
+                sx={{ marginBottom: "16px" }}
+                onChange={(val) => {
+                  setbookName(val.target.value);
+                }}
+                value={bookName}
+                error={bookNameError}
+                helperText={bookNameError ? "Please Fill Book Name" : null}
+              />
+              <TextField
+                type="number"
+                size="small"
+                fullWidth
+                label="Book Price"
+                variant="outlined"
+                sx={{ marginBottom: "16px" }}
+                onChange={(val) => {
+                  setbookPrice(val.target.value);
+                }}
+                value={bookPrice}
+                error={priceError}
+                helperText={priceError ? "Please Fill Book Price" : null}
+              />
+              <TextField
+                type="number"
+                size="small"
+                fullWidth
+                label="Book Quantity"
+                variant="outlined"
+                sx={{ marginBottom: "16px" }}
+                onChange={(val) => {
+                  setbookQty(val.target.value);
+                }}
+                value={bookQty}
+                error={qtyError}
+                helperText={qtyError ? "Please Fill Book Quantity" : null}
+              />
+              <Button
+                variant="outlined"
+                component="label"
+                color={bookFileNameError ? "error" : "primary"}
               >
-                <form onSubmit={formik.handleSubmit}>
-                  <div>
-                    <Box
-                      sx={{
-                        alignItems: 'center',
-                        display: 'flex',
-                        pb: 3
-                      }}
-                    >
-                      <Avatar
-                        src="/static/user-chen_simmons.png"
-                        sx={{
-                          height: 64,
-                          mr: 2,
-                          width: 64
-                        }}
-                      />
-                      <div>
-                        <Button
-                          color="primary"
-                          size="small"
-                          sx={{ mb: 1 }}
-                          type="button"
-                          variant="outlined"
-                        >
-                          Upload new picture
-                        </Button>
-                        <div>
-                          <Typography
-                            color="textSecondary"
-                            variant="caption"
-                          >
-                            Recommended dimensions: 200x200, maximum file size: 5MB
-                          </Typography>
-                        </div>
-                      </div>
-                    </Box>
-                    <Grid
-                      container
-                      spacing={2}
-                      sx={{ maxWidth: 420 }}
-                    >
-                      <Grid
-                        item
-                        xs={12}
-                      >
-                        <TextField
-                          error={Boolean(formik.touched.fullName && formik.errors.fullName)}
-                          fullWidth
-                          helperText={formik.touched.fullName && formik.errors.fullName}
-                          label="Full Name"
-                          name="fullName"
-                          onBlur={formik.handleBlur}
-                          onChange={formik.handleChange}
-                          value={formik.values.fullName}
-                          variant="outlined"
-                        />
-                      </Grid>
-                      <Grid
-                        item
-                        xs={12}
-                      >
-                        <TextField
-                          error={Boolean(formik.touched.email && formik.errors.email)}
-                          fullWidth
-                          helperText={formik.touched.email && formik.errors.email}
-                          label="Email address"
-                          name="email"
-                          onBlur={formik.handleBlur}
-                          onChange={formik.handleChange}
-                          type="email"
-                          value={formik.values.email}
-                          variant="outlined"
-                        />
-                      </Grid>
-                      <Grid
-                        item
-                        xs={12}
-                      >
-                        <TextField
-                          error={Boolean(formik.touched.jobTitle && formik.errors.jobTitle)}
-                          fullWidth
-                          helperText={formik.touched.jobTitle && formik.errors.jobTitle}
-                          label="Job title"
-                          name="jobTitle"
-                          onBlur={formik.handleBlur}
-                          onChange={formik.handleChange}
-                          value={formik.values.jobTitle}
-                          variant="outlined"
-                        />
-                      </Grid>
-                      <Grid
-                        item
-                        xs={12}
-                      >
-                        <TextField
-                          error={Boolean(formik.touched.companyName && formik.errors.companyName)}
-                          fullWidth
-                          helperText={formik.touched.companyName && formik.errors.companyName}
-                          label="Company name"
-                          name="companyName"
-                          onBlur={formik.handleBlur}
-                          onChange={formik.handleChange}
-                          value={formik.values.companyName}
-                          variant="outlined"
-                        />
-                      </Grid>
-                      <Grid
-                        item
-                        xs={12}
-                      >
-                        <TextField
-                          error={Boolean(formik.touched.companySize && formik.errors.companySize)}
-                          fullWidth
-                          helperText={formik.touched.companySize && formik.errors.companySize}
-                          label="Company size"
-                          name="companySize"
-                          onBlur={formik.handleBlur}
-                          onChange={formik.handleChange}
-                          select
-                          value={formik.values.companySize}
-                          variant="outlined"
-                        >
-                          {companySizeOptions.map((companySizeOption) => (
-                            <MenuItem
-                              key={companySizeOption}
-                              value={companySizeOption}
-                            >
-                              {companySizeOption}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      </Grid>
-                      {formik.errors.submit && (
-                        <Grid
-                          item
-                          xs={12}
-                        >
-                          <FormHelperText error>
-                            {formik.errors.submit}
-                          </FormHelperText>
-                        </Grid>
-                      )}
-                      <Grid
-                        item
-                        xs={12}
-                      >
-                        <Button
-                          color="primary"
-                          size="large"
-                          type="submit"
-                          variant="contained"
-                        >
-                          Save settings
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </div>
-                </form>
-              </Card>
-            </Grid>
+                {bookFileName}
+                <input type="file" hidden onChange={uploadFile} />
+              </Button>
+              <Typography
+                sx={{
+                  fontSize: "12px",
+                  color: "red",
+                  display: bookFileNameError ? "flex" : "none",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                Please Add Image
+              </Typography>
+              <Button
+                sx={{ marginTop: "16px" }}
+                variant="contained"
+                onClick={addBook}
+              >
+                Add Book
+              </Button>
+            </Box>
           </Grid>
-        </Container>
+          <Grid item xs={12} md={6}>
+            <h4>Book update and remove not completed yet</h4>
+          </Grid>
+        </Grid>
       </Box>
     </>
   );
