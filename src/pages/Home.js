@@ -9,12 +9,12 @@ import {
   Grid,
   Typography,
 } from "@material-ui/core";
-import { SummaryItem } from "../components/reports/summary-item";
-import { OrdersTable } from "../components/orders-table";
-import { LibraryAdd, AttachMoney, ShoppingCart } from "@material-ui/icons";
+import { Statistics_Card } from "../components/card/Statistics_Card";
+import { OrdersTable } from "../components/Orders-Table";
+import { LibraryAdd, ShoppingCart,ImportContacts } from "@material-ui/icons";
 import { db } from "../Firebase";
 
-export const Reports = () => {
+export const Home = () => {
   const [orders, setOrders] = useState([]);
   const [category, setCategory] = useState(0);
 
@@ -30,9 +30,9 @@ export const Reports = () => {
       label: "Category",
     },
     {
-      content: "3456",
-      icon: AttachMoney,
-      label: "Transactions",
+      content: "0",
+      icon: ImportContacts,
+      label: "All Books",
     },
   ];
 
@@ -71,7 +71,7 @@ export const Reports = () => {
             </Grid>
             {stats.map((item) => (
               <Grid item key={item.label} md={4} xs={12}>
-                <SummaryItem
+                <Statistics_Card
                   content={item.content}
                   icon={item.icon}
                   label={item.label}

@@ -1,9 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import {
   AppBar,
-  Avatar,
   Box,
-  Link,
   Toolbar,
   IconButton,
   Typography,

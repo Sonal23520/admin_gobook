@@ -18,7 +18,7 @@ import {
 
 import { db, storage } from "../Firebase";
 
-export const Category = () => {
+export const Book = () => {
   const [bookName, setbookName] = useState("");
   const [bookPrice, setbookPrice] = useState("");
   const [bookQty, setbookQty] = useState("");
@@ -141,6 +141,7 @@ export const Category = () => {
       );
     }
   }
+
   function clean() {
     setbookFileName("Upload Book Image");
     setbookName("");
@@ -163,6 +164,7 @@ export const Category = () => {
   function closeMessage() {
     setState({ ...state, open: false });
   }
+
   function gradeDisable(catename) {
     if (catename.startsWith("Grade 1")) {
       setgrades([]);

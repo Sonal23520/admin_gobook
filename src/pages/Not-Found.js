@@ -1,6 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Button, Container, Typography } from '@material-ui/core';
-import { EmojiSadOutlined as EmojiSadIcon } from '../icons/emoji-sad-outlined';
+import { EmojiSad as EmojiSadIcon } from '../icons/Emoji-Sad';
 
 export const NotFound = () => (
   <Box sx={{ backgroundColor: 'background.default' }}>

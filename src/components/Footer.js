@@ -25,9 +25,9 @@ export const Footer = () => (
           color="textSecondary"
           variant="body2"
         >
-          © 2021 Devias
+          © 2021 Sonal Sithara
         </Typography>
-        <Box sx={{ flexGrow: 1 }} />
+        <Box sx={{ flexGrow: 1 }}/>
         <Link
           color="textSecondary"
           href="https://material-ui.com/store/items/carpatin-dashboard"
@@ -35,7 +35,7 @@ export const Footer = () => (
           target="_blank"
           variant="body2"
         >
-          Upgrade to Pro
+          Contact
         </Link>
         <Link
           color="textSecondary"

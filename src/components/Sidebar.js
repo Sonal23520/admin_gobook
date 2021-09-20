@@ -1,16 +1,6 @@
-import { Link as RouterLink, matchPath, useLocation } from "react-router-dom";
-import {
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from "@material-ui/core";
-import { Cog as CogIcon } from "../icons/cog";
-import { DocumentText as DocumentTextIcon } from "../icons/document-text";
-import { Home, Book, Category } from "@material-ui/icons";
-import { Star as StarIcon } from "../icons/star";
-import { User as UserIcon } from "../icons/user";
+import { Link as RouterLink, matchPath, useLocation } from 'react-router-dom';
+import { Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Book, Category, Home } from '@material-ui/icons';
 
 const items = [
   {
@@ -19,25 +9,16 @@ const items = [
     label: "Home",
   },
   {
-    href: "/dashboard/settings",
+    href: "/dashboard/book",
     icon: Book,
     label: "Book",
   },
   {
-    href: "/dashboard/theme",
+    href: "/dashboard/category",
     icon: Category,
     label: "Category",
   },
-  {
-    href: "/dashboard/icons",
-    icon: StarIcon,
-    label: "Icons",
-  },
-  {
-    href: "/404",
-    icon: UserIcon,
-    label: "404",
-  },
+
 ];
 
 export const Sidebar = () => {

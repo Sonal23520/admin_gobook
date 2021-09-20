@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { styled } from "@material-ui/core/styles";
 import { Navbar } from "./Navbar";
 import { Sidebar } from "./Sidebar";
-import { Footer } from "./footer";
+import { Footer } from "./Footer";
 
 const DashboardLayoutRoot = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,

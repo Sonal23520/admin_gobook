@@ -1,37 +1,14 @@
 import PropTypes from "prop-types";
 
 import {
-  Box,
   Chip,
-  Link,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  Typography,
   TableContainer,
 } from "@material-ui/core";
-import { Scrollbar } from "./scrollbar";
-
-const statusVariants = [
-  {
-    label: "Placed",
-    value: "placed",
-  },
-  {
-    label: "Processed",
-    value: "processed",
-  },
-  {
-    label: "Delivered",
-    value: "delivered",
-  },
-  {
-    label: "Complete",
-    value: "complete",
-  },
-];
 
 export const OrdersTable = ({ orders }) => {
   return (

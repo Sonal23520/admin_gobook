@@ -1,9 +1,9 @@
 import { Navigate } from "react-router-dom";
-import { Layout } from "./components/layout";
-import { NotFound } from "./pages/not-found";
+import { Layout } from "./components/Layout";
+import { NotFound } from "./pages/Not-Found";
 import { Home } from "./pages/Home";
-import { Category } from "./pages/Category";
 import { Book } from "./pages/Book";
+import { Category } from "./pages/Category";
 
 export const routes = [
   {
@@ -20,12 +20,12 @@ export const routes = [
       },
 
       {
-        path: "settings",
-        element: <Category />,
+        path: "book",
+        element: <Book />,
       },
       {
-        path: "theme",
-        element: <Book />,
+        path: "category",
+        element: <Category />,
       },
 
       {

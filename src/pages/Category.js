@@ -14,7 +14,7 @@ import {
 
 import { db, storage } from "../Firebase";
 
-export const Book = () => {
+export const Category = () => {
   const [categoryName, setCategoryName] = useState("");
   const [categoryFileName, setCategoryFileName] = useState(
     "Upload Category Image"
@@ -102,6 +102,7 @@ export const Book = () => {
       );
     }
   }
+
   function clean() {
     setCategoryFileName("Upload Category Image");
     setCategoryName("");
@@ -115,12 +116,14 @@ export const Book = () => {
   function closeMessage() {
     setState({ ...state, open: false });
   }
+
   return (
     <>
       <Helmet>
         <title>GoBooks Category</title>
       </Helmet>
-      {/* //! Snackbat// */}
+
+      {/* ////////////? UTIL START///////// */}
       <Snackbar
         key={vertical + horizontal}
         anchorOrigin={{ vertical, horizontal }}
@@ -132,13 +135,15 @@ export const Book = () => {
           {successMessage}
         </Alert>
       </Snackbar>
-      {/* //! Backdrop// */}
+
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={backdrop}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
+      {/* ////////////? UTIL END///////// */}
+
       <Box
         sx={{
           backgroundColor: "Background.default",
