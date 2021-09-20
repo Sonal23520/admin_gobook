@@ -148,6 +148,7 @@ export const Book = () => {
     setbookFile([]);
     setbookPrice("");
     setbookQty("");
+    setgradeValue("");
     setcategoryValue("");
     setcategoryError(false);
     setgradeError(false);
