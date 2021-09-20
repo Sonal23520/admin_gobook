@@ -1,10 +1,9 @@
 import { Navigate } from "react-router-dom";
 import { Layout } from "./components/layout";
-import { Icons } from "./pages/icons";
 import { NotFound } from "./pages/not-found";
-import { Reports } from "./pages/reports";
-import { Settings } from "./pages/settings";
-import { Theme } from "./pages/theme";
+import { Home } from "./pages/Home";
+import { Category } from "./pages/Category";
+import { Book } from "./pages/Book";
 
 export const routes = [
   {
@@ -17,21 +16,18 @@ export const routes = [
     children: [
       {
         path: "",
-        element: <Reports />,
+        element: <Home />,
       },
 
       {
         path: "settings",
-        element: <Settings />,
+        element: <Category />,
       },
       {
         path: "theme",
-        element: <Theme />,
+        element: <Book />,
       },
-      {
-        path: "icons",
-        element: <Icons />,
-      },
+
       {
         path: "*",
         element: <Navigate to="/404" />,

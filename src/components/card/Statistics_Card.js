@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Avatar, Box, Card, Typography } from '@material-ui/core';
 
-export const SummaryItem = (props) => {
+export const Statistics_Card = (props) => {
   const { content, icon: Icon, label, ...other } = props;
 
   return (
@@ -54,7 +54,7 @@ export const SummaryItem = (props) => {
   );
 };
 
-SummaryItem.propTypes = {
+Statistics_Card.propTypes = {
   content: PropTypes.string.isRequired,
   icon: PropTypes.elementType,
   label: PropTypes.string.isRequired

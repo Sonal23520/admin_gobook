@@ -14,7 +14,7 @@ import {
 
 import { db, storage } from "../Firebase";
 
-export const Theme = () => {
+export const Book = () => {
   const [categoryName, setCategoryName] = useState("");
   const [categoryFileName, setCategoryFileName] = useState(
     "Upload Category Image"

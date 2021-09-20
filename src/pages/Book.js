@@ -18,7 +18,7 @@ import {
 
 import { db, storage } from "../Firebase";
 
-export const Settings = () => {
+export const Category = () => {
   const [bookName, setbookName] = useState("");
   const [bookPrice, setbookPrice] = useState("");
   const [bookQty, setbookQty] = useState("");
