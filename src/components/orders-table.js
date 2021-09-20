@@ -51,7 +51,7 @@ export const OrdersTable = ({ orders }) => {
           <TableBody>
             {orders.map((order) => {
               return (
-                <TableRow key={order.id}>
+                <TableRow key={order.date}>
                   <TableCell>{order.id}</TableCell>
                   <TableCell>{order.data.date}</TableCell>
                   <TableCell>{order.data.bookname}</TableCell>
