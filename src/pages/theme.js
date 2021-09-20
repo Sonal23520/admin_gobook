@@ -95,11 +95,17 @@ export const Theme = () => {
                     vertical: "top",
                     horizontal: "center",
                   });
+                  clean();
                 });
             });
         }
       );
     }
+  }
+  function clean() {
+    setCategoryFileName("Upload Category Image");
+    setCategoryName("");
+    setCategoryFile([]);
   }
 
   function openMessage(newState) {
@@ -215,7 +221,7 @@ export const Theme = () => {
             </Box>
           </Grid>
           <Grid item xs={12} md={6}>
-            <h4>sd</h4>
+            <h4>Category update and remove not completed yet</h4>
           </Grid>
         </Grid>
       </Box>
