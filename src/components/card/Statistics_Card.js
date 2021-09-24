@@ -1,3 +1,7 @@
+/*
+ * Copyright (c)  2021-2021, Sonal Sithara
+ */
+
 import PropTypes from 'prop-types';
 import { Avatar, Box, Card, Typography } from '@material-ui/core';
 
@@ -31,7 +35,7 @@ export const Statistics_Card = (props) => {
                 width: 56
               }}
             >
-              <Icon sx={{ color: 'primary.contrastText' }} />
+              <Icon sx={{ color: 'primary.contrastText' }}/>
             </Avatar>
           </Box>
         )}

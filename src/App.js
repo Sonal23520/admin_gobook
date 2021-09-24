@@ -1,3 +1,7 @@
+/*
+ * Copyright (c)  2021-2021, Sonal Sithara
+ */
+
 import { useRoutes } from 'react-router-dom';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import { theme } from './theme';
@@ -8,7 +12,7 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
+      <CssBaseline/>
       {content}
     </ThemeProvider>
   );

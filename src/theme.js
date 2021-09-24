@@ -1,3 +1,7 @@
+/*
+ * Copyright (c)  2021-2021, Sonal Sithara
+ */
+
 import { createTheme } from '@material-ui/core/styles';
 
 export const theme = createTheme({

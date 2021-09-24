@@ -1,19 +1,23 @@
-import PropTypes from "prop-types";
+/*
+ * Copyright (c)  2021-2021, Sonal Sithara
+ */
+
+import PropTypes from 'prop-types';
 
 import {
   Chip,
   Table,
   TableBody,
   TableCell,
-  TableHead,
-  TableRow,
   TableContainer,
-} from "@material-ui/core";
+  TableHead,
+  TableRow
+} from '@material-ui/core';
 
 export const OrdersTable = ({ orders }) => {
   return (
     <div>
-      <TableContainer sx={{ maxHeight: "45vh" }}>
+      <TableContainer sx={{ maxHeight: '45vh' }}>
         <Table stickyHeader sx={{ minWidth: 1000 }}>
           <TableHead>
             <TableRow>
@@ -36,8 +40,8 @@ export const OrdersTable = ({ orders }) => {
                   <TableCell>{order.data.price}</TableCell>
                   <TableCell>
                     <Chip
-                      color={order.data.ispending ? "error" : "success"}
-                      label={order.data.ispending ? "Pending" : "Completed"}
+                      color={order.data.ispending ? 'error' : 'success'}
+                      label={order.data.ispending ? 'Pending' : 'Completed'}
                       variant="outlined"
                     />
                   </TableCell>
@@ -52,5 +56,5 @@ export const OrdersTable = ({ orders }) => {
 };
 
 OrdersTable.propTypes = {
-  orders: PropTypes.array.isRequired,
+  orders: PropTypes.array.isRequired
 };

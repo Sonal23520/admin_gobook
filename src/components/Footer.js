@@ -1,3 +1,7 @@
+/*
+ * Copyright (c)  2021-2021, Sonal Sithara
+ */
+
 import { Box, Container, Link, Typography } from '@material-ui/core';
 
 export const Footer = () => (

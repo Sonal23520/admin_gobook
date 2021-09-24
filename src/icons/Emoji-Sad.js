@@ -1,3 +1,7 @@
+/*
+ * Copyright (c)  2021-2021, Sonal Sithara
+ */
+
 import { createSvgIcon } from '@material-ui/core/utils';
 
 export const EmojiSad = createSvgIcon(

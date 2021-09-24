@@ -1,3 +1,7 @@
+/*
+ * Copyright (c)  2021-2021, Sonal Sithara
+ */
+
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Button, Container, Typography } from '@material-ui/core';
 import { EmojiSad as EmojiSadIcon } from '../icons/Emoji-Sad';
@@ -14,7 +18,7 @@ export const NotFound = () => (
         flexDirection: 'column'
       }}
     >
-      <EmojiSadIcon sx={{ color: 'text.secondary' }} />
+      <EmojiSadIcon sx={{ color: 'text.secondary' }}/>
       <Typography
         align="center"
         color="textPrimary"

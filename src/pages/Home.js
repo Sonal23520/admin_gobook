@@ -1,18 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Helmet } from "react-helmet";
-import {
-  Box,
-  Card,
-  CardHeader,
-  Container,
-  Divider,
-  Grid,
-  Typography,
-} from "@material-ui/core";
-import { Statistics_Card } from "../components/card/Statistics_Card";
-import { OrdersTable } from "../components/Orders-Table";
-import { LibraryAdd, ShoppingCart,ImportContacts } from "@material-ui/icons";
-import { db } from "../Firebase";
+/*
+ * Copyright (c)  2021-2021, Sonal Sithara
+ */
+
+import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
+import { Box, Card, CardHeader, Container, Divider, Grid, Typography } from '@material-ui/core';
+import { Statistics_Card } from '../components/card/Statistics_Card';
+import { OrdersTable } from '../components/Orders-Table';
+import { ImportContacts, LibraryAdd, ShoppingCart } from '@material-ui/icons';
+import { db } from '../Firebase';
 
 export const Home = () => {
   const [orders, setOrders] = useState([]);
@@ -22,30 +18,30 @@ export const Home = () => {
     {
       content: orders.length,
       icon: ShoppingCart,
-      label: "Orders",
+      label: 'Orders'
     },
     {
       content: category,
       icon: LibraryAdd,
-      label: "Category",
+      label: 'Category'
     },
     {
-      content: "0",
+      content: '0',
       icon: ImportContacts,
-      label: "All Books",
-    },
+      label: 'All Books'
+    }
   ];
 
   useEffect(() => {
-    db.collection("Orders").onSnapshot((snapshot) => {
+    db.collection('Orders').onSnapshot((snapshot) => {
       setOrders(
         snapshot.docs.map((doc) => ({
           id: doc.id,
-          data: doc.data(),
+          data: doc.data()
         }))
       );
     });
-    db.collection("GoBook").onSnapshot((snapshot) => {
+    db.collection('GoBook').onSnapshot((snapshot) => {
       setCategory(snapshot.size);
     });
   }, []);
@@ -57,9 +53,9 @@ export const Home = () => {
       </Helmet>
       <Box
         sx={{
-          backgroundColor: "background.default",
+          backgroundColor: 'background.default',
           pb: 3,
-          pt: 4,
+          pt: 4
         }}
       >
         <Container maxWidth="lg">
@@ -80,9 +76,9 @@ export const Home = () => {
             ))}
             <Grid item xs={12}>
               <Card variant="outlined">
-                <CardHeader title="Latest Orders" />
-                <Divider />
-                <OrdersTable orders={orders} />
+                <CardHeader title="Latest Orders"/>
+                <Divider/>
+                <OrdersTable orders={orders}/>
               </Card>
             </Grid>
           </Grid>
