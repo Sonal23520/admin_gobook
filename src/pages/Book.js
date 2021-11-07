@@ -130,7 +130,8 @@ export const Book = () => {
                   bookimage: url,
                   bookname: bookName,
                   bookprice: bookPrice,
-                  qty: bookQty
+                  qty: bookQty,
+                  date:new Date().toJSON().slice(0,10).replace(/-/g,'/'),
                 })
                 .then(() => {
                   setSuccessMessage('Book Added');
