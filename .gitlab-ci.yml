@@ -1,19 +1,33 @@
-image: node:latest
-
-cache:
-  paths:
-    - node_modules/
-    - app/bower_components
-
-deploy_production:
+deploy:staging:
+  image: andreysenov/firebase-tools:latest
   stage: deploy
-  environment: Production
+  before_script:
+    - firebase use $ENVIRONMENT
+  script:
+    - firebase deploy
+        --token $FIREBASE_TOKEN
+        --message "Pipeline $CI_PIPELINE_ID, build $CI_BUILD_ID"
+        --non-interactive
+        --only hosting
+    - echo "ENVIRONMENT_URL=$(firebase hosting:channel:open live --non-interactive | awk '{ print $3 }')" >> deploy.env
+  environment:
+    name: staging
+    url: $ENVIRONMENT_URL
+  artifacts:
+    reports:
+      dotenv: deploy.env
+  dependencies:
+    - build
+  variables:
+    GIT_STRATEGY: none
+    ENVIRONMENT: staging
   only:
     - master
-  script:
-    - npm install -g firebase-tools
-    - npm install -g bower
-    - npm install
-    - bower install --allow-root
-    - firebase use --token $FIREBASE_TOKEN production
-    - firebase deploy -m "Pipeline $CI_PIPELINE_ID, build $CI_BUILD_ID" --non-interactive --token $FIREBASE_TOKEN
+
+deploy:production:
+  extends: deploy:staging
+  environment:
+    name: production
+  variables:
+    ENVIRONMENT: production
+  when: manual
