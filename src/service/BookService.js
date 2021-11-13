@@ -52,7 +52,6 @@ export const addNewBook = (
             const prog = Math.round(
               (snapshot.bytesTransferred / snapshot.totalBytes) * 100
             );
-            setBackdrop(true);
             setProgress(prog);
           },
           (error) => {
@@ -75,8 +74,8 @@ export const addNewBook = (
                         : parseInt(gradeValue.split("_")[1]),
                     book_id: bookId,
                     bookname: bookName,
-                    bookprice: bookPrice,
-                    qty: bookQty,
+                    bookprice: parseInt(bookPrice),
+                    qty: parseInt(bookQty),
                     bookimage: url,
                   })
                   .then(() => {
