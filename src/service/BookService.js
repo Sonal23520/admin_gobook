@@ -72,7 +72,7 @@ export const addNewBook = (
                     grade:
                       AppConstant.EMPTY === gradeValue
                         ? "None"
-                        : gradeValue.split("_")[1],
+                        : parseInt(gradeValue.split("_")[1]),
                     book_id: bookId,
                     bookname: bookName,
                     bookprice: bookPrice,
