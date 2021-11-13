@@ -31,4 +31,4 @@ production:
   when: manual
   allow_failure: false
   script:
-    - firebase deploy -m "Pipe $CI_PIPELINE_ID Build $CI_BUILD_ID" --only hosting:<YOUR TARGET NAME> --non-interactive --token $FIREBASE_TOKEN
+    - firebase deploy -m "Pipe $CI_PIPELINE_ID Build $CI_BUILD_ID" --only hosting:gobook --non-interactive --token $FIREBASE_TOKEN
