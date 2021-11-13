@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "gobook-2352"
-  }
+    "staging": "gobook-2352",
+    "production": "gobook-2352"
+  },
+  "targets": {}
 }
