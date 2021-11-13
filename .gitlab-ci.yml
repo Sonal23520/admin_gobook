@@ -1,45 +1,19 @@
+image: rambabusaravanan/firebase
+
 stages:
-  - install
-  - build
-  - test
   - deploy
 
-install:
-  stage: install
-  image: node:14.9-alpine3.12
-  script:
-    - npm install
-  cache:
-    key:
-      files:
-        - package-lock.json
-    paths:
-      - node_modules/
+cache:                      # no need if not node project
+  paths:                    # no need if not node project
+    - node_modules/         # no need if not node project
+  key: "$CI_REPOSITORY_URL" # no need if not node project
 
-build:
-  stage: build
-  image: node:14.9-alpine3.12
+deploy-prod:
+  stage: deploy
+  only:
+    - master
   script:
-    - npm run build
-  needs: ["install"]
-  cache:
-    key:
-      files:
-        - package-lock.json
-    policy: pull
-    paths:
-      - node_modules/
-  artifacts:
-    expire_in: 1 week
-    paths:
-      - .firebaserc
-      - build
-      - firebase.json
-
-  script:
-    - npm install
-    - npm build
-    - echo "# Deploying App"
-    - firebase use tragopoulos-portfolio --token $FIREBASE_TOKEN
-    - firebase deploy --only hosting -m "Pipeline $CI_PIPELINE_ID Build $CI_BUILD_ID"
-    - echo "# Deployed successfully!"
+    - yarn              # no need if not node project
+    - yarn run build    # no need if not node project
+    - firebase use gobook --token $FIREBASE_TOKEN
+    - firebase deploy --only hosting -m "Pipe $CI_PIPELINE_ID Build $CI_BUILD_ID @ Hash ${CI_COMMIT_SHA:0:7}" --token $FIREBASE_TOKEN
