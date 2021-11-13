@@ -4,10 +4,10 @@
 
 import { Navigate } from 'react-router-dom';
 import { Layout } from './components/Layout';
-import { NotFound } from './pages/Not-Found';
-import { Home } from './pages/Home';
-import { Book } from './pages/Book';
-import { Category } from './pages/Category';
+import { NotFound } from './screen/Not-Found';
+import { Home } from './screen/Home';
+import { Book } from './screen/Book';
+import { Category } from './screen/Category';
 
 export const routes = [
   {

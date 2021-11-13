@@ -19,8 +19,9 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-
+import * as AppConstant from "../Constant/AppConstant";
 import { db, storage } from "../Firebase";
+import { addNewBook } from "../service/BookService";
 
 export const Book = () => {
   const [bookName, setbookName] = useState("");
@@ -30,7 +31,9 @@ export const Book = () => {
   const [gradeValue, setgradeValue] = useState("");
   const [grades, setgrades] = useState([]);
   const [categoryName, setcategoryName] = useState([]);
-  const [bookFileName, setbookFileName] = useState("Upload Book Image");
+  const [bookFileName, setbookFileName] = useState(
+    AppConstant.DEFAULT_BOOK_UPLOAD_NAME
+  );
   const [bookFile, setbookFile] = useState([]);
   const noneGrade = useRef();
   //Validation//
@@ -52,9 +55,10 @@ export const Book = () => {
   });
   const { vertical, horizontal, open } = state;
   const [successMessage, setSuccessMessage] = useState("");
+  const [alertColor, setAlertColor] = useState();
 
   useEffect(() => {
-    db.collection("GoBook").onSnapshot((snapshot) => {
+    db.collection(AppConstant.CATEGORY_COLLECTION).onSnapshot((snapshot) => {
       setcategoryName(snapshot.docs.map((doc) => doc.id));
     });
   }, []);
@@ -66,106 +70,36 @@ export const Book = () => {
     }
   }
 
-  function validation() {
-    if (categoryValue === "") {
-      setcategoryError(true);
-    } else if (categoryValue.startsWith("Grade") && gradeValue === "") {
-      setcategoryError(false);
-      setgradeError(true);
-    } else if (bookName === "") {
-      setgradeError(false);
-      setbookNameError(true);
-    } else if (bookPrice === "") {
-      setbookNameError(false);
-      setpriceError(true);
-    } else if (bookQty === "") {
-      setpriceError(false);
-      setqtyError(true);
-    } else if (
-      bookFileName === "Upload Book Image" ||
-      !bookFile.type.startsWith("image")
-    ) {
-      setqtyError(false);
-      setbookFileNameError(true);
-    } else {
-      setbookFileNameError(false);
-      return true;
-    }
-  }
-
-  // .collection(
-  //       categoryValue.startsWith('Grade')
-  //           ? gradeValue
-  //           : noneGrade.current.value
-  //   )
-
-  function addBookData(url) {
-    let collectionReference;
-    let documentReference = db.collection("GoBook").doc(categoryValue);
-    if (categoryValue.startsWith("Grade")) {
-      collectionReference = documentReference
-        .collection(gradeValue)
-        .doc(`${gradeValue}_Books`)
-        .collection("Books");
-    } else {
-      collectionReference = documentReference.collection("Books");
-    }
-    collectionReference
-      .doc(bookName)
-      .set({
-        bookimage: url,
-        bookname: bookName,
-        bookprice: bookPrice,
-        qty: bookQty,
-        date: new Date().toJSON().slice(0, 10).replace(/-/g, "/"),
-      })
-      .then(() => {
-        setSuccessMessage("Book Added");
-        openMessage({
-          vertical: "top",
-          horizontal: "center",
-        });
-        clean();
-      });
-  }
-
   function addBook() {
-    if (validation()) {
-      const uploadImage = storage
-        .ref(`Book_Images/${bookFile.name}`)
-        .put(bookFile);
-
-      uploadImage.on(
-        "state_changed",
-        (snapshot) => {
-          const prog = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          );
-          setBackdrop(true);
-          setProgress(prog);
-        },
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          storage
-            .ref("Book_Images")
-            .child(bookFile.name)
-            .getDownloadURL()
-            .then((url) => {
-              setBackdrop(false);
-              addBookData(url)
-            })
-            .catch((erro) => {
-              console.log(erro);
-            });
-        }
-      );
-    }
+    addNewBook(
+      categoryValue,
+      setcategoryError,
+      setgradeError,
+      gradeValue,
+      bookName,
+      setbookNameError,
+      setpriceError,
+      bookPrice,
+      bookQty,
+      setqtyError,
+      bookFileName,
+      bookFile,
+      setbookFileNameError,
+      setBackdrop,
+      setProgress
+    ).then((value) => {
+      setAlertColor(value ? "success" : "error");
+      setSuccessMessage(value ? "Book Added" : "Book Added Failed");
+      openMessage({
+        vertical: "top",
+        horizontal: "center",
+      });
+      clean();
+    });
   }
 
   function clean() {
-    setbookFileName("Upload Book Image");
+    setbookFileName(AppConstant.DEFAULT_BOOK_UPLOAD_NAME);
     setbookName("");
     setbookFile([]);
     setbookPrice("");
@@ -189,17 +123,17 @@ export const Book = () => {
   }
 
   function gradeDisable(catename) {
-    if (catename.startsWith("Grade 1")) {
+    if (catename.startsWith(`${AppConstant.GRADE} 1`)) {
       setgrades([]);
       setgradeDisableCkeck(false);
       for (let index = 1; index <= 5; index++) {
-        setgrades((oldArray) => [...oldArray, `Grade_${index}`]);
+        setgrades((oldArray) => [...oldArray, `${AppConstant.GRADE}_${index}`]);
       }
-    } else if (catename.startsWith("Grade 6")) {
+    } else if (catename.startsWith(`${AppConstant.GRADE} 6`)) {
       setgrades([]);
       setgradeDisableCkeck(false);
       for (let index = 6; index <= 10; index++) {
-        setgrades((oldArray) => [...oldArray, `Grade_${index}`]);
+        setgrades((oldArray) => [...oldArray, `${AppConstant.GRADE}_${index}`]);
       }
     } else {
       setgradeDisableCkeck(true);
@@ -220,7 +154,11 @@ export const Book = () => {
         onClose={closeMessage}
         autoHideDuration={5000}
       >
-        <Alert severity="success" onClose={closeMessage} sx={{ width: "100%" }}>
+        <Alert
+          severity={alertColor}
+          onClose={closeMessage}
+          sx={{ width: "100%" }}
+        >
           {successMessage}
         </Alert>
       </Snackbar>
