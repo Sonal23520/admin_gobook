@@ -28,6 +28,8 @@ export const categoryValidation = (
 export const bookValidation = (
   categoryValue,
   setcategoryError,
+  productValue,
+  setproductError,
   setgradeError,
   gradeValue,
   bookName,
@@ -40,18 +42,21 @@ export const bookValidation = (
   bookFile,
   setbookFileNameError
 ) => {
-  if (categoryValue === "") {
+  if (categoryValue.id === AppConstant.ZERO) {
     setcategoryError(true);
-  } else if (categoryValue.startsWith(AppConstant.GRADE) && gradeValue === "") {
+  } else if (productValue.id === AppConstant.ZERO) {
+    setproductError(true);
+    setcategoryError(false);
+  } else if (categoryValue.name.startsWith(AppConstant.GRADE) && gradeValue === AppConstant.EMPTY) {
     setcategoryError(false);
     setgradeError(true);
-  } else if (bookName === "") {
+  } else if (bookName === AppConstant.EMPTY) {
     setgradeError(false);
     setbookNameError(true);
-  } else if (bookPrice === "") {
+  } else if (bookPrice === AppConstant.EMPTY) {
     setbookNameError(false);
     setpriceError(true);
-  } else if (bookQty === "") {
+  } else if (bookQty === AppConstant.EMPTY) {
     setpriceError(false);
     setqtyError(true);
   } else if (

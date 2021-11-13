@@ -27,10 +27,12 @@ export const Book = () => {
   const [bookName, setbookName] = useState("");
   const [bookPrice, setbookPrice] = useState("");
   const [bookQty, setbookQty] = useState("");
-  const [categoryValue, setcategoryValue] = useState("");
+  const [categoryValue, setcategoryValue] = useState({ id: 0, name: "" });
+  const [productValue, setproductValue] = useState({ id: 0, name: "" });
   const [gradeValue, setgradeValue] = useState("");
   const [grades, setgrades] = useState([]);
   const [categoryName, setcategoryName] = useState([]);
+  const [productName, setproductName] = useState([]);
   const [bookFileName, setbookFileName] = useState(
     AppConstant.DEFAULT_BOOK_UPLOAD_NAME
   );
@@ -41,6 +43,7 @@ export const Book = () => {
   const [priceError, setpriceError] = useState(false);
   const [qtyError, setqtyError] = useState(false);
   const [categoryError, setcategoryError] = useState(false);
+  const [productError, setproductError] = useState(false);
   const [gradeError, setgradeError] = useState(false);
   const [bookFileNameError, setbookFileNameError] = useState(false);
   const [gradeDisableCkeck, setgradeDisableCkeck] = useState(true);
@@ -57,10 +60,27 @@ export const Book = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [alertColor, setAlertColor] = useState();
 
-  useEffect(() => {
-    db.collection(AppConstant.CATEGORY_COLLECTION).onSnapshot((snapshot) => {
-      setcategoryName(snapshot.docs.map((doc) => doc.id));
-    });
+  useEffect(async () => {
+    await db
+      .collection(AppConstant.CATEGORY_COLLECTION)
+      .onSnapshot((snapshot) => {
+        setcategoryName(
+          snapshot.docs.map((doc) => ({
+            id: doc.data().id,
+            name: doc.data().name,
+          }))
+        );
+      });
+    await db
+      .collection(AppConstant.PRODUCT_COLLECTION)
+      .onSnapshot((snapshot) => {
+        setproductName(
+          snapshot.docs.map((doc) => ({
+            id: doc.data().id,
+            name: doc.data().name,
+          }))
+        );
+      });
   }, []);
 
   function uploadFile(file) {
@@ -71,9 +91,12 @@ export const Book = () => {
   }
 
   function addBook() {
+    console.log(categoryValue);
     addNewBook(
       categoryValue,
       setcategoryError,
+      productValue,
+      setproductError,
       setgradeError,
       gradeValue,
       bookName,
@@ -105,7 +128,9 @@ export const Book = () => {
     setbookPrice("");
     setbookQty("");
     setgradeValue("");
-    setcategoryValue("");
+    setcategoryValue({});
+    setproductValue({});
+    setproductError(false);
     setcategoryError(false);
     setgradeError(false);
     setbookNameError(false);
@@ -122,14 +147,14 @@ export const Book = () => {
     setState({ ...state, open: false });
   }
 
-  function gradeDisable(catename) {
-    if (catename.startsWith(`${AppConstant.GRADE} 1`)) {
+  function gradeDisable(cateVal) {
+    if (cateVal.startsWith(`${AppConstant.GRADE} 1`)) {
       setgrades([]);
       setgradeDisableCkeck(false);
       for (let index = 1; index <= 5; index++) {
         setgrades((oldArray) => [...oldArray, `${AppConstant.GRADE}_${index}`]);
       }
-    } else if (catename.startsWith(`${AppConstant.GRADE} 6`)) {
+    } else if (cateVal.startsWith(`${AppConstant.GRADE} 6`)) {
       setgrades([]);
       setgradeDisableCkeck(false);
       for (let index = 6; index <= 10; index++) {
@@ -220,14 +245,36 @@ export const Book = () => {
                   label="Select Category"
                   onChange={(val) => {
                     setcategoryValue(val.target.value);
-                    gradeDisable(val.target.value);
+                    gradeDisable(val.target.value.name);
                   }}
                 >
                   {categoryName.map((categoryname) => (
-                    <MenuItem value={categoryname}>{categoryname}</MenuItem>
+                    <MenuItem value={categoryname}>
+                      {categoryname.name}
+                    </MenuItem>
                   ))}
                 </Select>
               </FormControl>
+
+              <FormControl size="small" sx={{ marginBottom: "16px" }} fullWidth>
+                <InputLabel id="demo-simple-select-label-grade">
+                  Select Product
+                </InputLabel>
+                <Select
+                  error={productError}
+                  labelId="demo-simple-select-label-grade"
+                  value={productValue}
+                  label="Select Product"
+                  onChange={(val) => {
+                    setproductValue(val.target.value);
+                  }}
+                >
+                  {productName.map((product) => (
+                    <MenuItem value={product}>{product.name}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
               {gradeDisableCkeck ? (
                 <TextField
                   inputRef={noneGrade}

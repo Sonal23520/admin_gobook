@@ -8,3 +8,4 @@ export const CATEGORY_COLLECTION = "Category";
 export const PRODUCT_COLLECTION = "Product";
 export const GRADE = "Grade";
 export const ZERO = 0;
+export const EMPTY = "";
